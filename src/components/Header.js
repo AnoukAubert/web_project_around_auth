@@ -6,7 +6,7 @@ export default function Header({loggedIn, handleLogout}) {
     <div>
       <header className="header">
         <img className="header__logo" alt="logo Around The US" src={logo} />
-        {loggedIn && <a onClick={handleLogout}>Cerrar sesión </a>}
+        {loggedIn  && <a className="header__status" href="#" onClick={handleLogout}>Cerrar sesión </a>}
       </header>
     </div>
   );

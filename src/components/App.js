@@ -26,14 +26,13 @@ function App() {
   const [cards, setCards] = React.useState([]);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [openTooltip, setOpenTooltip] = React.useState(false);
   const [messageTooltip, setMessageTooltip] = React.useState('');
   const [tooltipType, setTooltipType] = React.useState('success');
 
   const history = useHistory();
-  const [loggedIn, setLoggedIn] = React.useState(false);
-
+  
   const closeAllPopups = () => {
     setOpenPopupErase(false);
     setOpenPopupZoom(false);
@@ -133,7 +132,7 @@ function App() {
         localStorage.setItem('token', token);
         getUserInfo();        
       }else{
-//mostrat tooltip
+        message.setMessageTooltip(true)
       }
       
     }).catch((error) => {
@@ -179,9 +178,9 @@ function App() {
         <div className="page">
           <Header loggedIn={loggedIn} handleLogout={handleLogout} />
           <Switch>
-            <ProtectedRoute path="/login" loggedIn={loggedIn}>
+            <Route path="/login">
               <Login handleSubmit={handleLogin}/>
-            </ProtectedRoute>
+            </Route>
             <ProtectedRoute path="/home" loggedIn={loggedIn}>
             <Main
             handleEditPicClick={handleEditAvatarClick}
@@ -194,9 +193,9 @@ function App() {
             cards={cards}
           />
             </ProtectedRoute>
-            <ProtectedRoute path="/register">
+            <Route path="/register">
               <Register handleSubmit={handleRegister}/>
-            </ProtectedRoute>
+            </Route>
           </Switch>
           <Footer />
 
@@ -228,7 +227,7 @@ function App() {
             activeSubmit={true}
             onClose={closeAllPopups}
           ></PopupWithForm>
-          <InfoTooltip open={openTooltip} message={messageTooltip} type={tooltipType} />
+          <InfoTooltip open={openTooltip} message={messageTooltip} type={tooltipType} onClose={closeAllPopups} />
         </div>
       </CurrentUserContext.Provider>
     </>

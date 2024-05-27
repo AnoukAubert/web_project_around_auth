@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Login ({ handleSubmit, confirmation = "Iniciar Sesió" }) {
+export default function Login ({ handleSubmit, confirmation = "Iniciar Sesión" }) {
   const [buttonContent, setButtonContent] = React.useState(confirmation);
   const formRef = React.useRef();
   const handlePrepareSubmit = (evt) => {
@@ -42,4 +42,4 @@ export default function Login ({ handleSubmit, confirmation = "Iniciar Sesió" }
         </div>
         </>
     )
-}
+})
