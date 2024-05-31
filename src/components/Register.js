@@ -30,7 +30,7 @@ export default function Register ({handleSubmit, confirmation = "Regístrate"}) 
             ref={formRef}
           >
             <input name="email" className="login__input" type="text" placeholder="Correo electrónico"></input>
-            <input name="password" className="login__input" type="text" placeholder="Contraseña"></input>
+            <input name="password" className="login__input" type="password" placeholder="Contraseña"></input>
             <button
               className="login__button"
               type="submit"

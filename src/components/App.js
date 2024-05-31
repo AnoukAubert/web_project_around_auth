@@ -132,7 +132,6 @@ function App() {
       .login(email, password)
       .then(({ token, message }) => {
         if (token) {
-          console.log("holaaaa");
           localStorage.setItem("token", token);
           getUserInfo(token);          
         } else {

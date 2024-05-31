@@ -44,3 +44,13 @@
   opacity: 0;
   pointer-events: none;
 }
+
+.popup__message {
+  color: black;
+  text-align: center;
+}
+
+.popup__icon {
+  display: block;
+  margin: 0 auto;
+}
