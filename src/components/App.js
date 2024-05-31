@@ -6,8 +6,8 @@ import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
-import api  from "../utils/api";
-import auth  from "../utils/auth";
+import api from "../utils/api";
+import auth from "../utils/auth";
 import ImagePopup from "./ImagePopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import AddPlacePopup from "./AddPlacePopup";
@@ -28,11 +28,11 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [openTooltip, setOpenTooltip] = React.useState(false);
-  const [messageTooltip, setMessageTooltip] = React.useState('');
-  const [tooltipType, setTooltipType] = React.useState('success');
+  const [messageTooltip, setMessageTooltip] = React.useState("");
+  const [tooltipType, setTooltipType] = React.useState("success");
 
   const history = useHistory();
-  
+
   const closeAllPopups = () => {
     setOpenPopupErase(false);
     setOpenPopupZoom(false);
@@ -119,58 +119,74 @@ function App() {
   };
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       getUserInfo(token);
-    };
-    
+    }else{
+      history.push('/login')
+    }
   }, []);
 
-  const handleLogin = ({email, password}) => {
-    return auth.login(email, password).then(({token, message}) => {
-      if(token){
-        localStorage.setItem('token', token);
-        getUserInfo();        
-      }else{
-        message.setMessageTooltip(true)
-      }
-      
-    }).catch((error) => {
-      console.error(error)
-    });
-  }
+  const handleLogin = ({ email, password }) => {
+    return auth
+      .login(email, password)
+      .then(({ token, message }) => {
+        if (token) {
+          console.log("holaaaa");
+          localStorage.setItem("token", token);
+          getUserInfo(token);          
+        } else {
+          setMessageTooltip(message);
+          setTooltipType('error');
+          setOpenTooltip(true)
+          
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const handleLogout = () => {
     localStorage.clear();
     setCurrentUser({});
     setLoggedIn(false);
-    history.push('/login')
-  }
+    history.push("/login");
+  };
 
-  const handleRegister = ({email, password}) => {
-    return auth.login(email, password).then(({error}) => {
-      if(error){
-
-      }else{        
-      }
-      
-    }).catch((error) => {
-      console.error(error)
-    });
-  }
+  const handleRegister = ({ email, password }) => {
+    return auth
+      .register(email, password)
+      .then(({ error }) => {
+        if (error) {
+          setMessageTooltip(error);
+          setTooltipType('error');
+          setOpenTooltip(true)
+        } else {
+          setMessageTooltip('Se ha registrado con éxito');
+          setTooltipType('success');
+          setOpenTooltip(true);
+          history.push('/login')
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const getUserInfo = (token) => {
-    auth.userInfo(token).then(user => {
-      history.push('/home');
+    auth.userInfo(token).then((user) => {
+     
       setLoggedIn(true);
       api.getCards().then((cards) => {
         setCards(cards);
       });
       api.getUserInfo().then((user) => {
         setCurrentUser(user);
+        history.push("/home");
       });
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -179,22 +195,22 @@ function App() {
           <Header loggedIn={loggedIn} handleLogout={handleLogout} />
           <Switch>
             <Route path="/login">
-              <Login handleSubmit={handleLogin}/>
+              <Login handleSubmit={handleLogin} />
             </Route>
             <ProtectedRoute path="/home" loggedIn={loggedIn}>
-            <Main
-            handleEditPicClick={handleEditAvatarClick}
-            handleEditProfileClick={handleEditProfileClick}
-            handleNewPostClick={handleAddPlaceClick}
-            handleZoomClick={handleZoomClick}
-            handleImageAddLike={handleImageAddLike}
-            handleImageRemove={handleImageRemove}
-            handleImageRemoveLike={handleImageRemoveLike}
-            cards={cards}
-          />
+              <Main
+                handleEditPicClick={handleEditAvatarClick}
+                handleEditProfileClick={handleEditProfileClick}
+                handleNewPostClick={handleAddPlaceClick}
+                handleZoomClick={handleZoomClick}
+                handleImageAddLike={handleImageAddLike}
+                handleImageRemove={handleImageRemove}
+                handleImageRemoveLike={handleImageRemoveLike}
+                cards={cards}
+              />
             </ProtectedRoute>
             <Route path="/register">
-              <Register handleSubmit={handleRegister}/>
+              <Register handleSubmit={handleRegister} />
             </Route>
           </Switch>
           <Footer />
@@ -227,7 +243,12 @@ function App() {
             activeSubmit={true}
             onClose={closeAllPopups}
           ></PopupWithForm>
-          <InfoTooltip open={openTooltip} message={messageTooltip} type={tooltipType} onClose={closeAllPopups} />
+          <InfoTooltip
+            open={openTooltip}
+            message={messageTooltip}
+            type={tooltipType}
+            onClose={closeAllPopups}
+          />
         </div>
       </CurrentUserContext.Provider>
     </>
